@@ -6,7 +6,6 @@ import json
 
 def grabTweets(api, maxId=None):
     homeTweets = api.home_timeline(since_id=maxId)
-    print(maxId)
     data = []
     for t in homeTweets:
         normal = True
@@ -23,7 +22,7 @@ def grabTweets(api, maxId=None):
         dictTemp = {
             "timestamp": t.created_at,
             "id": t.id,
-            "user": t.user.name,
+            "user": t.user.name.encode('utf-8'),
             "retweeted": retweeted,
             "favorited": t.favorited,
             "quoted": t.is_quote_status,
@@ -71,7 +70,7 @@ def main():
     auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
     api = tweepy.API(auth)
     df = pd.DataFrame(columns=[
-        'user', 'retweeted', 'favorited', 'quoted', 'normal', 'id', 'timestamp'
+            "user", "normal", "retweeted", "quoted", "favorited", "id", "timestamp"
     ])
     f = script_path + '\my_csv.csv'
     if not os.path.isfile(f):
